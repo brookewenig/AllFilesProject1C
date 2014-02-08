@@ -7,12 +7,47 @@ if (!db_connection) {
 }
 mysql_select_db("CS143", $db_connection);
 
+function AddMovieInfo($title, $year, $mpaarating, $company) //as well as genre
+{
+	$query = "UPDATE MaxMovieID  SET id = (id + 1)";
+	$queryResult = mysql_query($query);
+	$query = "SELECT id FROM MaxMovieID";
+	$queryResult = mysql_query($query);
+	$idNumber = mysql_fetch_row($queryResult);
+	$query = "INSERT INTO Movie VALUES ('$idNumber[0]', '$title', '$year', '$mpaarating', '$company')"; //adds to Movie table
+	$queryResult = mysql_query($query);
+	if ($queryResult)
+	{
+		print ("New movie information successfully added\n");
+	}
+	else
+	{
+		print ("Oh no!");
+	}
+	//add to Genre table
+	
+	$query = "INSERT INTO Genre VALUES ('$idNumber[0]', )"; //need to get array of genres clicked!!!!
+	$queryResult = mysql_query($query);
+	if ($queryResult)
+	{
+		print ("New genre information successfully added");
+	}
+	else
+	{
+		print ("Oh no!");
+	}
+	
+}
+
 $title = $_GET['title'];
 $company = $_GET['company'];
 $year = $_GET['year'];
 $mpaarating = $_GET['mpaarating'];
 $genre = $_GET['genre'];
-if ($title && $company && $year && $mpaarating)
+
+//call movie function here - double check that default are null if not specified
+
+if ($title && $company && $year && $mpaarating) //I'm thinking we might want to update our parts in 1B to say that genre can't be null/empty?
 {
 	//If the title, company, and year match, then update Table
 	//Otherwise, add new record using maxMovieIdTable.
